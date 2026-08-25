@@ -82,7 +82,7 @@
   .grid2{position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:26px;}
   .grid3{position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
 
-  /* 카드 기본에 블러 + 낮은 opacity */
+  /* 카드 기본 설정 */
   .card {
     background:var(--card);
     border-radius:20px;
@@ -124,15 +124,50 @@
     z-index: 10;
   }
 
-  /* 네 번째 슬라이드 애니메이션 요소 */
+  /* 네 번째 슬라이드 애니메이션 요소 (위치 이동 없이 페이드인만 적용) */
   .slide4-anim-target {
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 2.0s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .slide4-anim-target.show {
     opacity: 1;
-    transform: translateY(0);
+  }
+
+  /* 아래로 내려가는 모션 없이 부드럽게 나타나는 페이드인 모션 정의 */
+  @keyframes fadeInSmooth {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* 원래 블러 처리되었던 카드에 위치 이동 없이 페이드인만 동시에 적용 */
+  .slide.active .smooth-fade-up {
+    animation: fadeInSmooth 2.5s cubic-bezier(0.12, 1, 0.2, 1) forwards;
+    animation-delay: 0s !important; /* 지연 시간 없애서 동시에 실행 */
+  }
+
+  /* 추가 탐구 링크 버튼 스타일 */
+  .link-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-top: 18px;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, background 0.2s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .link-card:hover {
+    transform: translateY(-3px);
+    background: #3B3952;
   }
 
   .speech{
@@ -291,13 +326,13 @@
         <h3 style="margin-top:14px; font-size:22px;">정보 수집·관찰·기록·공유</h3>
         <p class="lead" style="margin-top:10px; font-size:18px;">시민이 문제 해결 과정에서 직접 활동하거나,<br>주변에서 얻은 정보를 모으고 기록하여 공유합니다.</p>
       </div>
-      <div class="card no-blur slide4-anim-target" style="border-color:var(--coral-deep); transition-delay: 0.15s;">
+      <div class="card no-blur slide4-anim-target" style="border-color:var(--coral-deep);">
         <span class="badge coral">방법 2</span>
         <h3 style="margin-top:14px; font-size:22px;">과학자의 연구에 참여</h3>
         <p class="lead" style="margin-top:10px; font-size:18px;">직접 연구를 수행하지 않아도,<br>천체 사진의 일부를 분석하거나<br>스마트폰에 특정 앱을 설치하는 것만으로도<br>연구에 도움을 줍니다.</p>
       </div>
     </div>
-    <div class="slide4-anim-target" style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; position:relative; z-index:2; transition-delay: 0.3s;">
+    <div class="slide4-anim-target" style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; position:relative; z-index:2;">
       <span class="chip">🔭 천체 사진 분석</span>
       <span class="chip">📱 앱 설치·데이터 제공</span>
       <span class="chip">✍️ 일상 속 관찰 공유</span>
@@ -376,14 +411,13 @@
     </div>
   </section>
 
-  <!-- 7. 작은 탐구 (8페이지 / STEP 1, 2, 3 슬라이드) -->
+  <!-- 7. 작은 탐구 (8페이지) -->
   <section class="slide" id="slideStep">
     <div class="slide-index"></div>
     <div class="eyebrow"><span class="tag">작은 탐구</span></div>
     <h2 class="title display" style="font-size:36px;">우리 지역의 멸종위기종 동식물 조사하기</h2>
     <p class="lead" style="margin-bottom:20px; font-size:18px;">전국 멸종위기종 동식물 자료를 활용해,<br>우리 지역의 멸종위기종과 생태 모니터링 사례를 직접 찾아봅시다.</p>
 
-    <!-- STEP 1, 2, 3 카드: 촤라락 펼쳐짐 + 클릭 시 순차 확대 -->
     <div class="grid3">
       <div class="card step-card" style="transition-delay: 0.1s, 0s, 0s, 0s;" onclick="setStepFocus(0)">
         <span class="badge yellow">STEP 1</span>
@@ -432,7 +466,107 @@
     </div>
   </section>
 
-  <!-- 9. 마무리 -->
+  <!-- 9. 추가 탐구 ①: 프로젝트 소개 (동시에 페이드인 적용) -->
+  <section class="slide">
+    <div class="slide-index"></div>
+    <div class="eyebrow"><span class="tag">추가 탐구</span></div>
+    <h2 class="title display" style="font-size:38px;">시민 참여형 전국 도로 소음 지도 앱</h2>
+    <p class="lead" style="margin-bottom:16px; font-size:17px;">시민이 직접 도로변 소음을 측정하고 지도에 기록하는 디지털 참여 프로젝트</p>
+
+    <div class="grid2">
+      <div class="card no-blur smooth-fade-up">
+        <span class="badge yellow">제작 목적</span>
+        <p class="lead" style="margin-top:10px; font-size:16px; line-height:1.6;">전문 기관 조사에만 의존하지 않고, 시민이 생활 속 소음 정보를 관찰·기록하여 지역 소음 문제를 직관적으로 파악하도록 돕습니다.</p>
+      </div>
+      <div class="card no-blur smooth-fade-up">
+        <span class="badge teal">주요 기능</span>
+        <ul style="margin-top:10px; padding-left:18px; font-size:15px; color:var(--ink-soft); line-height:1.6; font-weight:500;">
+          <li>📍 <strong>위치 선택:</strong> 주소 검색 및 지도 이동</li>
+          <li>🎙️ <strong>소음 측정:</strong> 마이크로 5초간 소음 측정</li>
+          <li>💾 <strong>데이터 저장:</strong> 소음값, 위치, 시간 기록</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card no-blur smooth-fade-up" style="margin-top:16px; padding:14px 24px;">
+      <strong style="font-size:15px; display:block; margin-bottom:8px;">🎨 소음 지도 색상 표시 범례</strong>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <span class="chip" style="font-size:14px; padding:6px 14px; background:#4EC3B4; color:#fff; border:none;">~60 dB 이하 (초록)</span>
+        <span class="chip" style="font-size:14px; padding:6px 14px; background:#F6C445; color:var(--ink); border:none;">60~70 dB (노랑)</span>
+        <span class="chip" style="font-size:14px; padding:6px 14px; background:#F2896F; color:#fff; border:none;">70~80 dB (주황)</span>
+        <span class="chip" style="font-size:14px; padding:6px 14px; background:#E96E4F; color:#fff; border:none;">80 dB 초과 (빨강)</span>
+      </div>
+    </div>
+
+    <!-- 탐구 페이지 직관적 웹 링크 -->
+    <a href="https://shiny0young.github.io/youngchae-1.github.io/" target="_blank" rel="noopener noreferrer" class="link-card">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:22px;">🌐</span>
+        <div>
+          <strong style="font-size:16px; color:var(--cream); display:block;">추가 탐구 프로젝트 웹사이트 방문하기</strong>
+          <span style="font-size:13px; color:var(--cream-deep); opacity:0.8;">https://shiny0young.github.io/youngchae-1.github.io/</span>
+        </div>
+      </div>
+      <span style="font-weight:700; font-size:15px; color:var(--yellow);">바로가기 ↗</span>
+    </a>
+  </section>
+
+  <!-- 10. 추가 탐구 ②: 교과 연관성 및 프로젝트 의의 (동시에 페이드인 적용) -->
+  <section class="slide">
+    <div class="slide-index"></div>
+    <div class="eyebrow"><span class="tag">추가 탐구</span></div>
+    <h2 class="title display" style="font-size:38px;">교과 내용 구현 & 프로젝트 의의</h2>
+
+    <div class="flow" style="margin-top:16px; margin-bottom:24px;">
+      <div class="step" style="border-color:var(--teal-deep);">🎙️ 주변 도로 소음 직접 측정</div>
+      <div class="arrow">→</div>
+      <div class="step" style="border-color:var(--yellow-deep);">📍 위치 및 측정값 기록</div>
+      <div class="arrow">→</div>
+      <div class="step" style="border-color:var(--sky);">🗺️ 지도 시각화</div>
+      <div class="arrow">→</div>
+      <div class="step" style="border-color:var(--coral-deep);">🔍 지역 소음 문제 파악</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card no-blur smooth-fade-up">
+        <h3 style="font-size:19px; margin-bottom:8px;">📚 교과서 내용과의 연관성</h3>
+        <p class="lead" style="font-size:15px; line-height:1.6;">교과서의 핵심인 <strong>'시민의 관찰·정보 수집·기록·공유'</strong> 개념을 실생활 디지털 앱 기술로 직접 구현한 사례입니다.</p>
+      </div>
+      <div class="card no-blur smooth-fade-up">
+        <h3 style="font-size:19px; margin-bottom:8px;">💡 프로젝트 핵심 의의</h3>
+        <p class="lead" style="font-size:15px; line-height:1.6;">시민을 단순 영향 수혜자가 아닌 <strong>직접 데이터를 수집하는 '정보 생산자'</strong>로 전환하여 지역 문제 해결의 주체로 만듭니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. 추가 탐구 ③: 기대 효과 및 탐구의 한계 -->
+  <section class="slide">
+    <div class="slide-index"></div>
+    <div class="eyebrow"><span class="tag">추가 탐구</span></div>
+    <h2 class="title display" style="font-size:38px;">기대 효과 및 탐구의 한계</h2>
+
+    <div class="grid2" style="margin-top:10px;">
+      <div class="card">
+        <span class="badge teal" style="margin-bottom:10px;">🌟 기대 효과</span>
+        <ul style="padding-left:18px; font-size:15px; color:var(--ink-soft); line-height:1.6; font-weight:500;">
+          <li>생활 속 도로 소음 문제에 대한 시민 관심 유도</li>
+          <li>데이터 축적을 통한 지역별 소음 상황 직관적 파악</li>
+          <li>시민 참여형 사회 문제 해결 체험 기회 제공</li>
+        </ul>
+      </div>
+
+      <div class="card" style="background:var(--cream-deep);">
+        <span class="badge coral" style="margin-bottom:10px;">⚠️ 탐구의 한계 & 발전 방향</span>
+        <ul style="padding-left:18px; font-size:15px; color:var(--ink-soft); line-height:1.6; font-weight:500;">
+          <li><strong>정밀도 한계:</strong> 스마트폰 마이크 오차로 전문 장비 수준의 정밀도 미달</li>
+          <li><strong>저장 방식:</strong> 기기 자체 저장 방식으로, 중앙 서버 실시간 통합 미구현</li>
+          <li><strong>프로토타입:</strong> 실시간 통합 시스템 전 단계의 체험형 시제품 형태</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 마무리 -->
   <section class="slide" style="background:var(--ink); color:var(--cream);">
     <div class="slide-index" style="color:var(--cream); opacity:.55;"></div>
     <div class="eyebrow"><span class="tag" style="background:var(--yellow); color:var(--ink);">오늘의 정리</span></div>
@@ -444,6 +578,7 @@
       <span class="chip" style="background:transparent; border-color:var(--cream); color:var(--cream);">배리어 프리</span>
       <span class="chip" style="background:transparent; border-color:var(--cream); color:var(--cream);">생물 다양성</span>
       <span class="chip" style="background:transparent; border-color:var(--cream); color:var(--cream);">시민 과학</span>
+      <span class="chip" style="background:transparent; border-color:var(--cream); color:var(--cream);">도로 소음 지도</span>
     </div>
     <footer class="foot" style="color:var(--cream); opacity:.55;">04. 사회 문제와 시민참여 · 융합과학 탐구의 전망</footer>
   </section>
@@ -457,9 +592,8 @@
   const dotNav = document.getElementById('dotNav');
   const progressBar = document.getElementById('progressBar');
   let idx = 0;
-  let currentStepFocus = -1; // STEP 확대 단계 관리 (-1: 없음, 0: Step1, 1: Step2, 2: Step3)
+  let currentStepFocus = -1;
 
-  // 점 네비게이션 생성
   slides.forEach((s, i) => {
     const b = document.createElement('button');
     b.addEventListener('click', () => goTo(i));
@@ -473,7 +607,6 @@
     dots.forEach((d, j) => d.classList.toggle('active', j === idx));
     progressBar.style.width = (idx / (slides.length - 1)) * 100 + '%';
 
-    // 슬라이드 페이지 표시 정확히 업데이트 (현페이지 / 전체페이지)
     slides.forEach((s, j) => {
       const slideIndexDiv = s.querySelector('.slide-index');
       if(slideIndexDiv){
@@ -481,14 +614,12 @@
       }
     });
 
-    // 슬라이드 변경 시 4번째 슬라이드 애니메이션 초기화
     if(idx !== 3) {
       document.querySelectorAll('#slide4 .slide4-anim-target').forEach(el => {
         el.classList.remove('show');
       });
     }
 
-    // 8페이지(index 7) 진입 및 이탈 제어
     const stepCards = document.querySelectorAll('.step-card');
     if(idx === 7) {
       setTimeout(() => {
@@ -502,7 +633,6 @@
   }
   goTo(0);
 
-  // 8페이지 STEP 전용 강조 함수
   function updateStepFocus() {
     const stepCards = document.querySelectorAll('.step-card');
     stepCards.forEach((card, index) => {
@@ -515,7 +645,6 @@
     updateStepFocus();
   }
 
-  // 다음 진행 제어 함수 (8페이지에서는 STEP을 순차 확대 후 다음 페이지로 전환)
   function handleNext() {
     if (idx === 7 && currentStepFocus < 2) {
       currentStepFocus++;
@@ -525,7 +654,6 @@
     }
   }
 
-  // 이전 진행 제어 함수
   function handlePrev() {
     if (idx === 7 && currentStepFocus > -1) {
       currentStepFocus--;
@@ -538,14 +666,12 @@
   document.getElementById('nextBtn').addEventListener('click', handleNext);
   document.getElementById('prevBtn').addEventListener('click', handlePrev);
 
-  // 8페이지 화면 바탕 클릭 시에도 STEP 순차 확대 진행
   document.getElementById('slideStep').addEventListener('click', (e) => {
     if (!e.target.closest('.step-card')) {
       handleNext();
     }
   });
 
-  // 키보드 조작 통합
   window.addEventListener('keydown', (e) => {
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {
       e.preventDefault();
@@ -566,7 +692,6 @@
   window.addEventListener('resize', resizeStage);
   resizeStage();
 
-  // 일반 카드 클릭 시 블러 토글 (STEP 카드 제외)
   const cardContainers = document.querySelectorAll('.grid2, .grid3');
   cardContainers.forEach(container => {
     const cards = Array.from(container.querySelectorAll('.card:not(.no-blur):not(.step-card)'));
@@ -581,7 +706,6 @@
     });
   });
 
-  // 4번째 슬라이드 클릭 시 떠오르는 애니메이션
   const slide4 = document.getElementById('slide4');
   slide4.addEventListener('click', () => {
     if (idx === 3) {
@@ -591,7 +715,6 @@
     }
   });
 
-  // OX 퀴즈 버튼 클릭 시 토글
   function answerOX(btn, isTrue){
     const buttons = btn.parentElement.querySelectorAll('.ox-btn');
     const explain = document.getElementById('ox-explain');
